@@ -26,4 +26,11 @@ createdb testdb -U postgres -h db # password `postgres`
 pg_restore -e -v -O -x -d testdb --no-owner postgres.dmp -U postgres
 ```
 
+## Developpement
+
+```bash
+cd /src 
+python load_data.py
+```
+
 ## Useful links 
