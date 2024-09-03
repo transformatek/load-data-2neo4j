@@ -1,0 +1,4 @@
+psycopg2-binary==2.9.9
+neo4j==5.17.0
+colorama==0.4.6
+inflect==7.2.1
