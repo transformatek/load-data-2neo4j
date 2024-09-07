@@ -3,7 +3,6 @@ from dotenv import load_dotenv, find_dotenv
 import psycopg2
 from neo4j import GraphDatabase
 
-
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
@@ -60,30 +59,30 @@ class PostgresService:
         def __init__(self, service, name: str, cols: list = None):
             self.service = service
             self.name = name
-            cursor = service()
             if service.table_exists(name):
                 if not cols:
                     cols = "*"
                 columns = ", ".join([f"{col}" for col in cols])
-                cursor.execute(f"SELECT {columns} FROM {name}")
+                service.run_query(f"SELECT {columns} FROM {name}")
             elif cols:
                 columns = ", ".join(
                     [f"{name} {type}" for (name, type) in cols])
-                cursor.execute(
+                service.run_query(
                     f"CREATE TABLE IF NOT EXISTS {name} ({columns})")
             else:
                 raise ValueError("Please provide names for your columns.")
 
+        def __repr__(self):
+            return self.name
+
         def retrieve(self, columns: list[str] = "*", limit: int = 25):
-            cursor = self.service()
-            cursor.execute(
-                f"SELECT {', '.join(columns)} FROM {self.name} LIMIT {limit}"
-            )
-            records = cursor.fetchall()
+            service = self.service
+            query = f"SELECT {', '.join(columns)} FROM {self.name} LIMIT {limit}"
+            records = service.run_query(query)
             result = []
             for record in records:
                 record_dict = {}
-                for (col_name, col_type), value in zip(self.columns, record):
+                for (col_name, col_type), value in zip(self.columns(columns), record):
                     record_dict[col_name] = {"type": col_type, "value": value}
                 result.append(record_dict)
             return result
@@ -95,10 +94,14 @@ class PostgresService:
                 for record in records
             ]
 
-        @property
-        def columns(self):
+        def columns(self, cols: list[str] = "*"):
             cursor = self.service()
-            cursor.execute(f"SELECT * FROM {self.name} LIMIT 0")
+            if cols == "*":
+                cursor.execute(f"SELECT * FROM {self.name} LIMIT 0")
+            else:
+                cursor.execute(
+                    f"SELECT {', '.join([col for col in cols])} FROM {self.name} LIMIT 0"
+                )
             columns = [(desc[0], desc[1]) for desc in cursor.description]
             updated_columns = []
             for column in columns:
@@ -115,10 +118,24 @@ class Neo4JService:
         self.driver = GraphDatabase.driver(
             uri, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-    def __call__(self, database="neo4j"):
-        session = self.driver.session(database=database)
-        transaction = session.begin_transaction()
-        return transaction
+    def __call__(self):
+        with self.driver.session() as session:
+            return session
+
+    @property
+    def labels(self):
+        query = "CALL db.labels()"
+        return [label["label"] for label in self(query)]
+
+    def run_query(self, query):
+        session = self()
+        return session.run(query).data()
+
+    def run_queries(self, queries):
+        return [self.run_query(query) for query in queries]
+
+    def label_exists(self, label_name):
+        return label_name in self.labels
 
     def nodes(self, label="", limit=25):
         if label:
@@ -166,5 +183,4 @@ class Neo4JService:
 if __name__ == "__main__":
     psql_service = PostgresService("testdb", "postgres")
     tripdata = psql_service.Table(psql_service, "tripdata")
-    neo4j_service = Neo4JService("bolt://localhost:7687")
-    neo4j_service.import_pg(tripdata)
+    print(tripdata.retrieve(["congestion_surcharge"]))
