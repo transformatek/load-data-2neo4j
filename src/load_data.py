@@ -9,12 +9,11 @@ load_dotenv(dotenv_path)
 
 class PostgresService:
 
-    def __init__(self, database, user, host="127.0.0.1", port="5432"):
-        PSQL_PASSWORD = os.getenv("PSQL_PASSWORD")
+    def __init__(self, database, user, password, host="127.0.0.1", port="5432"):
         conn = psycopg2.connect(
             database=database,
             user=user,
-            password=PSQL_PASSWORD,
+            password=password,
             host=host,
             port=port,
         )
@@ -112,11 +111,8 @@ class PostgresService:
 
 
 class Neo4JService:
-    def __init__(self, uri):
-        NEO4J_USER = os.getenv("NEO4J_USER")
-        NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
-        self.driver = GraphDatabase.driver(
-            uri, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    def __init__(self, uri, user, password):
+        self.driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def __call__(self):
         with self.driver.session() as session:
@@ -181,6 +177,15 @@ class Neo4JService:
 
 
 if __name__ == "__main__":
-    psql_service = PostgresService("testdb", "postgres")
+    PSQL_PASSWORD = os.getenv("PSQL_PASSWORD")
+    psql_service = PostgresService("testdb", "postgres", PSQL_PASSWORD)
     tripdata = psql_service.Table(psql_service, "tripdata")
+    print(tripdata.columns())
     print(tripdata.retrieve(["congestion_surcharge"]))
+    NEO4J_USER = os.getenv("NEO4J_USER")
+    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+    neo4j_service = Neo4JService(
+        "bolt://localhost:7687", NEO4J_USER, NEO4J_PASSWORD)
+    neo4j_service.import_pg(tripdata)
+    neo4j_service.clean()
+    neo4j_service.close()
