@@ -9,3 +9,4 @@ import/*
 !plugins/.gitkeep
 !import/.gitkeep
 !/import/postgres.dmp
+.env
