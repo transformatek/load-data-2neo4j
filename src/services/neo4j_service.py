@@ -78,4 +78,10 @@ class Neo4JService:
     def close(self):
         self.driver.close()
 
+        
+    # TODO Add function to get Neo4J database schema 
+    def get_schema(self):
+        return "implement me"
+    
+
 
