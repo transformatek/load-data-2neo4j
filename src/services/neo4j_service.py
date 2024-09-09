@@ -1,8 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
-import psycopg2
 from neo4j import GraphDatabase
-
 from services.postgres_service import PostgresService
 
 dotenv_path = find_dotenv()
@@ -14,12 +12,13 @@ NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 
 
 class Neo4JService:
-    def __init__(self, uri, user, password):
-        self.driver = GraphDatabase.driver(uri, auth=(user, password))
+    def __init__(self):
+        self.driver = GraphDatabase.driver(
+            uri=NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD)
+        )
 
     def __call__(self):
-        with self.driver.session() as session:
-            return session
+        return self.driver.session()
 
     @property
     def labels(self):
@@ -78,10 +77,28 @@ class Neo4JService:
     def close(self):
         self.driver.close()
 
-        
-    # TODO Add function to get Neo4J database schema 
+    # TODO Add function to get Neo4J database schema
+    @property
+    def node_props(self):
+        query = """MATCH (node) RETURN (node)"""
+        return self.run_query(query)
+
+    @property
+    def rel_props(self):
+        query = """
+        MATCH (node_1)-[relationship]->(node_2) 
+        RETURN node_1, relationship, node_2
+        """
+        rel_props = self.run_query(query)
+        return rel_props
+
     def get_schema(self):
-        return "implement me"
-    
+        schema = f"""
+        This is the schema representation of the Neo4J database:
+        Node properties are as follows:
+        {self.node_props} 
+        Relationship properties are as follows:
+        {self.rel_props}
+        """
 
-
+        return schema

@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 import psycopg2
-from neo4j import GraphDatabase
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
@@ -14,8 +13,7 @@ PSQL_PORT = os.getenv("PSQL_PORT", "5432")
 
 class PostgresService:
 
-    def __init__(self, database):
-        # TODO decide on database
+    def __init__(self, database="postgres"):
         conn = psycopg2.connect(
             database=database,
             user=PSQL_USER,
@@ -114,4 +112,3 @@ class PostgresService:
                     f"SELECT typname FROM pg_type WHERE oid={column[1]}")
                 updated_columns.append((column[0], cursor.fetchall()[0][0]))
             return updated_columns
-
