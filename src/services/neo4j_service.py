@@ -29,6 +29,13 @@ class Neo4JService:
         session = self()
         return session.run(query).data()
 
+    def format_data(self, data):
+        formatted_data = ""
+        for node in data:
+            for key, value in node.items():
+                formatted_data += f"{key.split('.').pop()}: {value}\n"
+        return formatted_data
+
     def run_queries(self, queries):
         return [self.run_query(query) for query in queries]
 
@@ -48,8 +55,7 @@ class Neo4JService:
         props = [
             (
                 "{"
-                + ", ".join([f'{key}: "{value}"' for key,
-                            value in item.items()])
+                + ", ".join([f'{key}: "{value}"' for key, value in item.items()])
                 + "}"
             )
             for item in data
@@ -77,7 +83,6 @@ class Neo4JService:
     def close(self):
         self.driver.close()
 
-    # TODO Add function to get Neo4J database schema
     @property
     def node_props(self):
         query = """MATCH (node) RETURN (node)"""
@@ -95,9 +100,13 @@ class Neo4JService:
     def get_schema(self):
         schema = f"""
         This is the schema representation of the Neo4J database:
+        \n\n\n
         Node properties are as follows:
-        {self.node_props} 
+        
+        {self.node_props}
+         
         Relationship properties are as follows:
+        
         {self.rel_props}
         """
 

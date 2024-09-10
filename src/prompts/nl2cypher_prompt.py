@@ -17,22 +17,28 @@ class NL2CypherPrompt:
 
     def gen_prompt(self, user_input) -> str:
 
-        # TODO use self.database_schema
-        context = f"""...."""
+        context = self.database_schema
 
-        instructions = f"""..."""
+        task = f"""You are required to generate Cypher queries that answer the following question(s) 
+        based on the Graph schema:
+        
+        '{user_input}'
+        """
 
-        task = f"""... and the following question: 
-            {user_input}"""
-
+        constraints = """
+        Do not include any explanations, apologies, or anything other than the Cypher query in your answer.
+        Make sure that the Cypher query does run successfully on the given schema."""
         return f"""Context:
             {context} 
-
-            Instructions:
-            {instructions} 
             
             Task:
             {task}
-
-            Answer :
+            
+            Constraints:
+            {constraints}
+            
+            Answer:
             """
+
+    def prompt_llm(self, prompt):
+        return self.ai_model_service(prompt)

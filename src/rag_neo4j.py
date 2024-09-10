@@ -1,19 +1,15 @@
-import os
-
+from prompts.nl2cypher_prompt import NL2CypherPrompt
+from services.neo4j_service import Neo4JService
 
 if __name__ == "__main__":
     print("[RAG NEO4J] Start")
-    user_input = "Haw many trips we have ?"
-
-    # TODO 1 Get DB Schema
-    # TODO 2.1 Generate prompt (NL2CypherPrompt)
-    # TODO 2.2 Send it to the LLM (AIModelService)
-    # TODO 3 Get Cyper from returned text (may need some cleaning)
-    # TODO 4 Run Cypher on Neo4j (Neo4J service)
-    # TODO 5 Get Data from Neo4j
-
-    # TODO 6 Display the reruned data in readable format
-    result = "---------------------"
-    print(f"[RAG NEO4J] Retrived Data  {result}")
-
+    nl_2_cypher = NL2CypherPrompt()
+    user_input = """Who speaks a language related to English?"""
+    prompt = nl_2_cypher.gen_prompt(user_input)
+    answer = nl_2_cypher.prompt_llm(prompt)
+    print(answer)
+    neo4j_service = Neo4JService()
+    data = neo4j_service.run_query(answer)
+    result = neo4j_service.format_data(data)
+    print(f"[RAG NEO4J] Retrived Data:\n\n{result}")
     print("[RAG NEO4J] End")

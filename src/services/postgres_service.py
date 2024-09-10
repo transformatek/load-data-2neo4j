@@ -13,7 +13,7 @@ PSQL_PORT = os.getenv("PSQL_PORT", "5432")
 
 class PostgresService:
 
-    def __init__(self, database="postgres"):
+    def __init__(self, database="testdb"):
         conn = psycopg2.connect(
             database=database,
             user=PSQL_USER,
@@ -68,10 +68,8 @@ class PostgresService:
                 columns = ", ".join([f"{col}" for col in cols])
                 service.run_query(f"SELECT {columns} FROM {name}")
             elif cols:
-                columns = ", ".join(
-                    [f"{name} {type}" for (name, type) in cols])
-                service.run_query(
-                    f"CREATE TABLE IF NOT EXISTS {name} ({columns})")
+                columns = ", ".join([f"{name} {type}" for (name, type) in cols])
+                service.run_query(f"CREATE TABLE IF NOT EXISTS {name} ({columns})")
             else:
                 raise ValueError("Please provide names for your columns.")
 
@@ -108,7 +106,6 @@ class PostgresService:
             columns = [(desc[0], desc[1]) for desc in cursor.description]
             updated_columns = []
             for column in columns:
-                cursor.execute(
-                    f"SELECT typname FROM pg_type WHERE oid={column[1]}")
+                cursor.execute(f"SELECT typname FROM pg_type WHERE oid={column[1]}")
                 updated_columns.append((column[0], cursor.fetchall()[0][0]))
             return updated_columns
