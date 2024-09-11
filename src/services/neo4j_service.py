@@ -55,7 +55,8 @@ class Neo4JService:
         props = [
             (
                 "{"
-                + ", ".join([f'{key}: "{value}"' for key, value in item.items()])
+                + ", ".join([f'{key}: "{value}"' for key,
+                            value in item.items()])
                 + "}"
             )
             for item in data
@@ -85,17 +86,23 @@ class Neo4JService:
 
     @property
     def node_props(self):
-        query = """MATCH (node) RETURN (node)"""
+        query = """CALL db.schema.nodeTypeProperties()"""
         return self.run_query(query)
 
     @property
-    def rel_props(self):
+    def rel_type_props(self):
         query = """
-        MATCH (node_1)-[relationship]->(node_2) 
-        RETURN node_1, relationship, node_2
+        CALL db.schema.relTypeProperties()
         """
         rel_props = self.run_query(query)
         return rel_props
+
+    @property
+    def visualization(self):
+        query = """
+        CALL db.schema.visualization()
+        """
+        return self.run_query(query)
 
     def get_schema(self):
         schema = f"""
@@ -105,9 +112,13 @@ class Neo4JService:
         
         {self.node_props}
          
-        Relationship properties are as follows:
+        Relationship type properties are as follows:
         
-        {self.rel_props}
+        {self.rel_type_props}
+        
+        The database is visualized as follows:
+        
+        {self.visualization}
         """
 
         return schema
