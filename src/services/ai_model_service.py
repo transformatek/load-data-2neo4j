@@ -17,3 +17,18 @@ class AIModelService:
     def __call__(self, prompt):
         client = InferenceClient(api_key=self.api_key)
         return client.text_generation(prompt)
+
+    def humanize_answer(self, question, data):
+        prompt = f"""
+        Consider the following question: "{question}"
+        And the following set of data which is an answer to that question: {data}
+        
+        Can you make it so that the answer is more human-readable?
+        
+        Constraints:
+            Don't include any apologies, explanations, or anything other than the answer to the prompt.
+            
+        Answer:
+        
+        """
+        return self(prompt)
