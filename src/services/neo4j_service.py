@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from neo4j import GraphDatabase
-from services.postgres_service import PostgresService
+from services.postgres_service import Table
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
@@ -70,11 +70,19 @@ class Neo4JService:
         with self.driver.session() as session:
             session.run(query)
 
-    def import_pg(
-        self, table: PostgresService.Table, columns: list[str] = "*", limit: int = 25
-    ):
-        records = table.records(columns=columns, limit=limit)
-        self.create(table.name, data=records)
+    def import_pg(self, tables: list[Table], rels: list):
+        for table in tables:
+            records = table.records()
+            self.create(table.name, records)
+
+        for source_table, target_table, source_col, target_col, rel_name in rels:
+            query = f"""
+            MATCH (a:{source_table}), (b:{target_table})
+            WHERE a.{source_col} = b.{target_col}
+            CREATE (a)-[:{rel_name}]->(b)
+            """
+
+            self.run_query(query)
 
     def clean(self):
         query = f"MATCH (n) DETACH DELETE n"
@@ -108,7 +116,7 @@ class Neo4JService:
         schema = f"""
         This is the schema representation of the Neo4J database:
         \n\n\n
-        Node properties are as follows:
+        Node type properties are as follows:
         
         {self.node_props}
          

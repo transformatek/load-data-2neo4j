@@ -26,8 +26,11 @@ class NL2CypherPrompt:
         """
 
         constraints = """
+        Make sure that the Cypher query does run successfully on the given schema.
+        Make sure that your answer is logical.
+        Follow the structure of the database schema strictly.
         Do not include any explanations, apologies, or anything other than the Cypher query in your answer.
-        Make sure that the Cypher query does run successfully on the given schema."""
+        """
         return f"""Context:
             {context} 
             

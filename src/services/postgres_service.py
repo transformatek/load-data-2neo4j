@@ -58,54 +58,55 @@ class PostgresService:
     def close(self):
         self.conn.close()
 
-    class Table:
-        def __init__(self, service, name: str, cols: list = None):
-            self.service = service
-            self.name = name
-            if service.table_exists(name):
-                if not cols:
-                    cols = "*"
-                columns = ", ".join([f"{col}" for col in cols])
-                service.run_query(f"SELECT {columns} FROM {name}")
-            elif cols:
-                columns = ", ".join([f"{name} {type}" for (name, type) in cols])
-                service.run_query(f"CREATE TABLE IF NOT EXISTS {name} ({columns})")
-            else:
-                raise ValueError("Please provide names for your columns.")
 
-        def __repr__(self):
-            return self.name
+class Table:
+    def __init__(self, service, name: str, cols: list = None):
+        self.service = service
+        self.name = name
+        if service.table_exists(name):
+            if not cols:
+                cols = "*"
+            columns = ", ".join([f"{col}" for col in cols])
+            service.run_query(f"SELECT {columns} FROM {name}")
+        elif cols:
+            columns = ", ".join([f"{name} {type}" for (name, type) in cols])
+            service.run_query(f"CREATE TABLE IF NOT EXISTS {name} ({columns})")
+        else:
+            raise ValueError("Please provide names for your columns.")
 
-        def retrieve(self, columns: list[str] = "*", limit: int = 25):
-            service = self.service
-            query = f"SELECT {', '.join(columns)} FROM {self.name} LIMIT {limit}"
-            records = service.run_query(query)
-            result = []
-            for record in records:
-                record_dict = {}
-                for (col_name, col_type), value in zip(self.columns(columns), record):
-                    record_dict[col_name] = {"type": col_type, "value": value}
-                result.append(record_dict)
-            return result
+    def __repr__(self):
+        return self.name
 
-        def records(self, columns: list[str] = "*", limit: int = 25):
-            records = self.retrieve(columns, limit)
-            return [
-                {key: record[key]["value"] for key in record.keys()}
-                for record in records
-            ]
+    def retrieve(self, columns: list[str] = "*", limit: int = 25):
+        service = self.service
+        query = f"SELECT {', '.join(columns)} FROM {self.name} LIMIT {limit}"
+        records = service.run_query(query)
+        result = []
+        for record in records:
+            record_dict = {}
+            for (col_name, col_type), value in zip(self.columns(columns), record):
+                record_dict[col_name] = {"type": col_type, "value": value}
+            result.append(record_dict)
+        return result
 
-        def columns(self, cols: list[str] = "*"):
-            cursor = self.service()
-            if cols == "*":
-                cursor.execute(f"SELECT * FROM {self.name} LIMIT 0")
-            else:
-                cursor.execute(
-                    f"SELECT {', '.join([col for col in cols])} FROM {self.name} LIMIT 0"
-                )
-            columns = [(desc[0], desc[1]) for desc in cursor.description]
-            updated_columns = []
-            for column in columns:
-                cursor.execute(f"SELECT typname FROM pg_type WHERE oid={column[1]}")
-                updated_columns.append((column[0], cursor.fetchall()[0][0]))
-            return updated_columns
+    def records(self, columns: list[str] = "*", limit: int = 25):
+        records = self.retrieve(columns, limit)
+        return [
+            {key: record[key]["value"] for key in record.keys()} for record in records
+        ]
+
+    def columns(self, cols: list[str] = "*"):
+        cursor = self.service()
+        if cols == "*":
+            cursor.execute(f"SELECT * FROM {self.name} LIMIT 0")
+        else:
+            cursor.execute(
+                f"SELECT {', '.join([col for col in cols])} FROM {self.name} LIMIT 0"
+            )
+        columns = [(desc[0], desc[1]) for desc in cursor.description]
+        updated_columns = []
+        for column in columns:
+            cursor.execute(
+                f"SELECT typname FROM pg_type WHERE oid={column[1]}")
+            updated_columns.append((column[0], cursor.fetchall()[0][0]))
+        return updated_columns
