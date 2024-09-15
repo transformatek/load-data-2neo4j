@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from neo4j import GraphDatabase
-from services.postgres_service import Table
+from services.postgres_service import Table, PostgresService
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
@@ -71,6 +71,7 @@ class Neo4JService:
             session.run(query)
 
     def import_pg(self, tables: list[Table], rels: list):
+
         for table in tables:
             records = table.records()
             self.create(table.name, records)

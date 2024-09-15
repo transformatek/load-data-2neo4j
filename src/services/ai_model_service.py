@@ -13,10 +13,10 @@ class AIModelService:
 
     def __init__(self, api_key=API_KEY):
         self.api_key = api_key
+        self.client = InferenceClient(api_key=self.api_key)
 
     def __call__(self, prompt):
-        client = InferenceClient(api_key=self.api_key)
-        return client.text_generation(prompt)
+        return self.client.text_generation(prompt, max_new_tokens=10000)
 
     def humanize_answer(self, question, data):
         prompt = f"""
