@@ -27,12 +27,12 @@ class DynamicExample:
     def get_examples(self, user_input: list[str], top_k=5):
         with open(
             os.path.join(os.path.dirname(__file__),
-                         "../../data/examples.json"), "r"
+                         "../../data/embeddings/examples.json"), "r"
         ) as f:
             examples = json.load(f)
         with open(
             os.path.join(os.path.dirname(__file__),
-                         "../../data/embeddings.csv"), "r"
+                         "../../data/embeddings/embeddings.csv"), "r"
         ) as f:
             embeddings = pd.read_csv(f)
         dataset_embeddings = torch.from_numpy(
@@ -42,12 +42,3 @@ class DynamicExample:
         hits = semantic_search(
             query_embeddings, dataset_embeddings, top_k=top_k)
         return [examples[hit["corpus_id"]]["query"] for hit in hits[0]]
-
-
-dynamic_example = DynamicExample()
-
-print(
-    dynamic_example.get_examples(
-        ["What is the population of the biggest city in Asia?"]
-    )
-)
