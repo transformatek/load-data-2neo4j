@@ -1,0 +1,358 @@
+[
+  {
+    "input": "What is the population of Beijing?",
+    "query": "MATCH (n {name: 'Beijing'}) RETURN n.population"
+  },
+  {
+    "input": "How many people live in Shanghai?",
+    "query": "MATCH (n {name: 'Shanghai'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of Mumbai?",
+    "query": "MATCH (n {name: 'Mumbai'}) RETURN n.area"
+  },
+  {
+    "input": "Which country does Cairo belong to?",
+    "query": "MATCH (n {name: 'Cairo'}) RETURN n.country_id"
+  },
+  {
+    "input": "What is the population of Lagos?",
+    "query": "MATCH (n {name: 'Lagos'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of Berlin?",
+    "query": "MATCH (n {name: 'Berlin'}) RETURN n.area"
+  },
+  {
+    "input": "What country has a population of 83,000,000?",
+    "query": "MATCH (n {population: '83000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which country has Rio de Janeiro?",
+    "query": "MATCH (n {name: 'Rio de Janeiro'}) RETURN n.country_id"
+  },
+  {
+    "input": "What is the population of Washington D.C?",
+    "query": "MATCH (n {name: 'Washington D.C'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of Sydney?",
+    "query": "MATCH (n {name: 'Sydney'}) RETURN n.area"
+  },
+  {
+    "input": "What country does Melbourne belong to?",
+    "query": "MATCH (n {name: 'Melbourne'}) RETURN n.country_id"
+  },
+  {
+    "input": "What is the population of Alexandria?",
+    "query": "MATCH (n {name: 'Alexandria'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of China?",
+    "query": "MATCH (n {name: 'China'}) RETURN n.area"
+  },
+  {
+    "input": "How many people live in India?",
+    "query": "MATCH (n {name: 'India'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of Egypt?",
+    "query": "MATCH (n {name: 'Egypt'}) RETURN n.area"
+  },
+  {
+    "input": "What is the population of Nigeria?",
+    "query": "MATCH (n {name: 'Nigeria'}) RETURN n.population"
+  },
+  {
+    "input": "Which country has an area of 357,022 sq km?",
+    "query": "MATCH (n {area: '357022'}) RETURN n.name"
+  },
+  {
+    "input": "How many people live in Brazil?",
+    "query": "MATCH (n {name: 'Brazil'}) RETURN n.population"
+  },
+  {
+    "input": "What is the area of Australia?",
+    "query": "MATCH (n {name: 'Australia'}) RETURN n.area"
+  },
+  {
+    "input": "What is the population of the United States?",
+    "query": "MATCH (n {name: 'United States'}) RETURN n.population"
+  },
+  {
+    "input": "Which continent has a population of 4,600,000,000?",
+    "query": "MATCH (n {population: '4600000000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the area of Africa?",
+    "query": "MATCH (n {name: 'Africa'}) RETURN n.area"
+  },
+  {
+    "input": "What continent has a population of 747,000,000?",
+    "query": "MATCH (n {population: '747000000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the area of North America?",
+    "query": "MATCH (n {name: 'North America'}) RETURN n.area"
+  },
+  {
+    "input": "How many people live in South America?",
+    "query": "MATCH (n {name: 'South America'}) RETURN n.population"
+  },
+  {
+    "input": "What is the population of Antarctica?",
+    "query": "MATCH (n {name: 'Antarctica'}) RETURN n.population"
+  },
+  {
+    "input": "Which city has a population of 21,540,000?",
+    "query": "MATCH (n {population: '21540000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the country_id of the country with Berlin?",
+    "query": "MATCH (n {name: 'Berlin'}) RETURN n.country_id"
+  },
+  {
+    "input": "What continent has the largest area?",
+    "query": "MATCH (n) RETURN n ORDER BY n.area DESC LIMIT 1"
+  },
+  {
+    "input": "What city has the smallest population?",
+    "query": "MATCH (n) RETURN n ORDER BY n.population ASC LIMIT 1"
+  },
+  {
+    "input": "What is the area of the largest city?",
+    "query": "MATCH (n) RETURN n ORDER BY n.area DESC LIMIT 1"
+  },
+  {
+    "input": "What country has the largest population?",
+    "query": "MATCH (n) RETURN n ORDER BY n.population DESC LIMIT 1"
+  },
+  {
+    "input": "Which city is located in the United States?",
+    "query": "MATCH (n {country_id: '8'}) RETURN n.name"
+  },
+  {
+    "input": "What city has an area of 12,368 sq km?",
+    "query": "MATCH (n {area: '12368'}) RETURN n.name"
+  },
+  {
+    "input": "What is the population of Australia?",
+    "query": "MATCH (n {name: 'Australia'}) RETURN n.population"
+  },
+  {
+    "input": "Which country is Cairo located in?",
+    "query": "MATCH (n {name: 'Cairo'}) RETURN n.country_id"
+  },
+  {
+    "input": "What is the area of the smallest country?",
+    "query": "MATCH (n) WHERE EXISTS(n.country_id) RETURN n ORDER BY n.area ASC LIMIT 1"
+  },
+  {
+    "input": "How many people live in Germany?",
+    "query": "MATCH (n {name: 'Germany'}) RETURN n.population"
+  },
+  {
+    "input": "Which country has Alexandria?",
+    "query": "MATCH (n {name: 'Alexandria'}) RETURN n.country_id"
+  },
+  {
+    "input": "What is the area of the largest continent?",
+    "query": "MATCH (n {name: 'Asia'}) RETURN n.area"
+  },
+  {
+    "input": "How many people live in Africa?",
+    "query": "MATCH (n {name: 'Africa'}) RETURN n.population"
+  },
+  {
+    "input": "What is the country_id of India?",
+    "query": "MATCH (n {name: 'India'}) RETURN n.country_id"
+  },
+  {
+    "input": "Which country has a population of 1,400,000,000?",
+    "query": "MATCH (n {population: '1400000000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the population of Egypt?",
+    "query": "MATCH (n {name: 'Egypt'}) RETURN n.population"
+  },
+  {
+    "input": "Which country has the largest area in South America?",
+    "query": "MATCH (n {continent_id: '5'}) RETURN n ORDER BY n.area DESC LIMIT 1"
+  },
+  {
+    "input": "Which continent has the smallest population?",
+    "query": "MATCH (n) WHERE EXISTS(n.continent_id) RETURN n ORDER BY n.population ASC LIMIT 1"
+  },
+  {
+    "input": "Which city has a population of 6,748,000?",
+    "query": "MATCH (n {population: '6748000'}) RETURN n.name"
+  },
+  {
+    "input": "Which continent does Brazil belong to?",
+    "query": "MATCH (n {name: 'Brazil'}) RETURN n.continent_id"
+  },
+  {
+    "input": "Which country has a population of 25,000,000?",
+    "query": "MATCH (n {population: '25000000'}) RETURN n.name"
+  },
+  {
+    "input": "What city is located in Nigeria?",
+    "query": "MATCH (n {country_id: '4'}) RETURN n.name"
+  },
+  {
+    "input": "Which country has the most cities in the dataset?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) RETURN n.country_id, count(n) ORDER BY count(n) DESC LIMIT 1"
+  },
+  {
+    "input": "What city has an area of 8200 sq km?",
+    "query": "MATCH (n {area: '8200'}) RETURN n.name"
+  },
+  {
+    "input": "How many people live in the smallest city by population?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) RETURN n ORDER BY n.population ASC LIMIT 1"
+  },
+  {
+    "input": "Which country has the most populous city?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) RETURN n ORDER BY n.population DESC LIMIT 1"
+  },
+  {
+    "input": "What is the population of the most populated continent?",
+    "query": "MATCH (n) WHERE EXISTS(n.continent_id) RETURN n ORDER BY n.population DESC LIMIT 1"
+  },
+  {
+    "input": "What city is located in Egypt?",
+    "query": "MATCH (n {country_id: '3'}) RETURN n.name"
+  },
+  {
+    "input": "What country is Mumbai located in?",
+    "query": "MATCH (n {name: 'Mumbai'}) RETURN n.country_id"
+  },
+  {
+    "input": "What continent has a population of 1,300,000,000?",
+    "query": "MATCH (n {population: '1300000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which city has the second-largest population?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) RETURN n ORDER BY n.population DESC SKIP 1 LIMIT 1"
+  },
+  {
+    "input": "What is the area of Rio de Janeiro?",
+    "query": "MATCH (n {name: 'Rio de Janeiro'}) RETURN n.area"
+  },
+  {
+    "input": "Which city has an area of 891 sq km?",
+    "query": "MATCH (n {area: '891'}) RETURN n.name"
+  },
+  {
+    "input": "Which country does Lagos belong to?",
+    "query": "MATCH (n {name: 'Lagos'}) RETURN n.country_id"
+  },
+  {
+    "input": "Which continent has a population of 592,000,000?",
+    "query": "MATCH (n {population: '592000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which continent has Antarctica?",
+    "query": "MATCH (n {name: 'Antarctica'}) RETURN n.continent_id"
+  },
+  {
+    "input": "What is the country_id of the country with the largest area?",
+    "query": "MATCH (n) WHERE EXISTS(n.country_id) RETURN n ORDER BY n.area DESC LIMIT 1"
+  },
+  {
+    "input": "Which city has an area of 6340 sq km?",
+    "query": "MATCH (n {area: '6340'}) RETURN n.name"
+  },
+  {
+    "input": "What is the area of the United States?",
+    "query": "MATCH (n {name: 'United States'}) RETURN n.area"
+  },
+  {
+    "input": "What is the population of the second-largest country by area?",
+    "query": "MATCH (n) WHERE EXISTS(n.country_id) RETURN n ORDER BY n.area DESC SKIP 1 LIMIT 1"
+  },
+  {
+    "input": "Which city has a population of 925,000?",
+    "query": "MATCH (n {population: '925000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the area of the smallest continent?",
+    "query": "MATCH (n) WHERE EXISTS(n.continent_id) RETURN n ORDER BY n.area ASC LIMIT 1"
+  },
+  {
+    "input": "Which city has a population of 2,300,000?",
+    "query": "MATCH (n {population: '2300000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the population of Rio de Janeiro?",
+    "query": "MATCH (n {name: 'Rio de Janeiro'}) RETURN n.population"
+  },
+  {
+    "input": "Which country does Shanghai belong to?",
+    "query": "MATCH (n {name: 'Shanghai'}) RETURN n.country_id"
+  },
+  {
+    "input": "What continent has the largest population?",
+    "query": "MATCH (n) WHERE EXISTS(n.continent_id) RETURN n ORDER BY n.population DESC LIMIT 1"
+  },
+  {
+    "input": "What city has a population of 3,500,000?",
+    "query": "MATCH (n {population: '3500000'}) RETURN n.name"
+  },
+  {
+    "input": "Which continent does Sydney belong to?",
+    "query": "MATCH (n {name: 'Sydney'}) RETURN n.continent_id"
+  },
+  {
+    "input": "What country has a population of 340,000,000?",
+    "query": "MATCH (n {population: '340000000'}) RETURN n.name"
+  },
+  {
+    "input": "What is the area of the second-largest country?",
+    "query": "MATCH (n) WHERE EXISTS(n.country_id) RETURN n ORDER BY n.area DESC SKIP 1 LIMIT 1"
+  },
+  {
+    "input": "What is the population of the second-most populous city?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) RETURN n ORDER BY n.population DESC SKIP 1 LIMIT 1"
+  },
+  {
+    "input": "Which city has a population of 14,000,000?",
+    "query": "MATCH (n {population: '14000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which continent does China belong to?",
+    "query": "MATCH (n {name: 'China'}) RETURN n.continent_id"
+  },
+  {
+    "input": "What is the area of North America?",
+    "query": "MATCH (n {name: 'North America'}) RETURN n.area"
+  },
+  {
+    "input": "Which city has an area of 980 sq km?",
+    "query": "MATCH (n {area: '980'}) RETURN n.name"
+  },
+  {
+    "input": "Which country has Sydney?",
+    "query": "MATCH (n {name: 'Sydney'}) RETURN n.country_id"
+  },
+  {
+    "input": "Which country has a population of 102,000,000?",
+    "query": "MATCH (n {population: '102000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which city has an area of 9,300 sq km?",
+    "query": "MATCH (n {area: '9300'}) RETURN n.name"
+  },
+  {
+    "input": "Which country has two cities in the dataset?",
+    "query": "MATCH (n) WHERE EXISTS(n.city_id) WITH n.country_id AS country, count(n) AS cities WHERE cities = 2 RETURN country"
+  },
+  {
+    "input": "Which continent has an area of 14,000,000 sq km?",
+    "query": "MATCH (n {area: '14000000'}) RETURN n.name"
+  },
+  {
+    "input": "Which country has a population of 1,380,000,000?",
+    "query": "MATCH (n {population: '1380000000'}) RETURN n.name"
+  }
+]
