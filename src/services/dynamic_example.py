@@ -1,11 +1,9 @@
 import requests
 import os
-import torch
 import json
 import pandas as pd
+import numpy as np
 from dotenv import load_dotenv, find_dotenv
-from sentence_transformers.util import semantic_search
-
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
@@ -14,6 +12,18 @@ API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sent
 
 
 class DynamicExample:
+
+    def __init__(self):
+        with open(
+            os.path.join(os.path.dirname(__file__),
+                         "../../data/embeddings/examples.json"), "r"
+        ) as f:
+            self.examples = json.load(f)
+        with open(
+            os.path.join(os.path.dirname(__file__),
+                         "../../data/embeddings/embeddings.csv"), "r"
+        ) as f:
+            self.embeddings = pd.read_csv(f)
 
     def query(self, texts: list[str]):
         headers = {"Authorization": f"Bearer {HF_TOKEN}"}
@@ -24,21 +34,37 @@ class DynamicExample:
         )
         return response.json()
 
+    def cosine_similarity(self, embedding_vector_a, embedding_vector_b):
+        embedding_vector_a = np.array(embedding_vector_a)
+        embedding_vector_b = np.array(embedding_vector_b)
+        dot_product = np.dot(embedding_vector_a, embedding_vector_b)
+        magnitude_a = np.linalg.norm(embedding_vector_a)
+        magnitude_b = np.linalg.norm(embedding_vector_b)
+
+        cosine_similarity = dot_product / (magnitude_a * magnitude_b)
+        return cosine_similarity
+
+    def get_k_most_similar(self, embeddings, target_embedding, top_k=5):
+        embeddings = np.array(embeddings)
+        target_embedding = np.array(target_embedding)
+
+        similarities = np.array(
+            [
+                self.cosine_similarity(target_embedding, embedding)
+                for embedding in embeddings
+            ]
+        )
+
+        top_k_indices = np.argsort(similarities)[-top_k:][::-1]
+        top_k_embeddings = embeddings[top_k_indices]
+        return top_k_indices, top_k_embeddings, similarities[top_k_indices]
+
     def get_examples(self, user_input: list[str], top_k=5):
-        with open(
-            os.path.join(os.path.dirname(__file__),
-                         "../../data/embeddings/examples.json"), "r"
-        ) as f:
-            examples = json.load(f)
-        with open(
-            os.path.join(os.path.dirname(__file__),
-                         "../../data/embeddings/embeddings.csv"), "r"
-        ) as f:
-            embeddings = pd.read_csv(f)
-        dataset_embeddings = torch.from_numpy(
-            embeddings.to_numpy()).to(torch.float)
+        embeddings = self.embeddings
+        examples = self.examples
+        dataset_embeddings = np.array(embeddings)
         question = self.query(user_input)
-        query_embeddings = torch.FloatTensor(question)
-        hits = semantic_search(
-            query_embeddings, dataset_embeddings, top_k=top_k)
-        return [examples[hit["corpus_id"]]["query"] for hit in hits[0]]
+        query_embeddings = np.array(question)
+        hits = self.get_k_most_similar(
+            dataset_embeddings, query_embeddings, top_k)
+        return [examples[index] for index in hits[0]]
