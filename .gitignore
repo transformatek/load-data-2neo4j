@@ -1,5 +1,7 @@
 logs/*
 data/*
+!data/embeddings/
+!data/.gitkeep
 conf/*
 plugins/*
 import/*
