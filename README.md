@@ -44,6 +44,13 @@ Access web interface at [http://localhost:7474/browser/](http://localhost:7474/b
 **IMPORTANT The authentication is disabled**
 
 
+Qdrant will be available at :
+
+- [Web UI (http://localhost:6333/dashboard)](http://localhost:6333/dashboard)
+- [REST API (http://localhost:6333)](http://localhost:6333)
+- [GRPC API (http://localhost:6334)](http://localhost:6334)
+
+
 ### Postgres import 
 
 ```bash
