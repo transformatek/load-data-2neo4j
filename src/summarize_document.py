@@ -11,10 +11,5 @@ if __name__ == '__main__':
         However, as AI continues to evolve, its ethical implications must be carefully considered. Issues related to privacy, bias, and job displacement require ongoing attention to ensure that the benefits of AI are distributed fairly across society. Nonetheless, AI holds immense promise for creating a future where technology augments human capabilities, leading to greater efficiencies, innovation, and opportunities across every sector. Its importance will only continue to grow as it becomes more deeply integrated into our daily lives.
     """
 
-    # qdrant = QdrantService()
-    # doc = Document(paragraph, chunk_size=1)
-    # embeddings = doc.load_embeddings()
-    # qdrant.insert_vectors("document", embeddings)
-
     prompt = VDBPrompt(paragraph)
     print(prompt.get_summary())
