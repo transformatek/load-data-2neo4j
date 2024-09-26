@@ -22,14 +22,33 @@ class Neo4JService:
 
     @property
     def labels(self):
+        """
+        Retrieves the names of all labels in a Neo4J database.
+        Returns:
+            list: A list of label names as strings.
+        """
         query = "CALL db.labels()"
         return [label["label"] for label in self(query)]
 
     def run_query(self, query):
+        """
+        Runs a Cypher query on a Neo4j database
+        Args:
+            query (str): The Cypher query to execute.
+        Returns:
+            list: A list of dictionaries containing the results of the query.
+        """
         session = self()
         return session.run(query).data()
 
     def format_data(self, data):
+        """
+        Formats data from a Neo4j query into a human-readable string.
+        Args:
+            data (list): The data to format.
+        Returns:
+            str: A formatted string representation of the data.
+        """
         formatted_data = ""
         for node in data:
             for key, value in node.items():
@@ -37,12 +56,35 @@ class Neo4JService:
         return formatted_data
 
     def run_queries(self, queries):
+        """
+        Runs Cypher queries on a Neo4j database
+        Args:
+            queries (list): The Cypher queries to execute.
+        Returns:
+            list: A list of dictionaries containing the results of the query.
+        """
+
         return [self.run_query(query) for query in queries]
 
     def label_exists(self, label_name):
+        """
+        Checks if a label exists in a Neo4j database
+        Args:
+            label_name (str): The name of the label to check for.
+        Returns:
+            bool: True if the label exists, False otherwise.
+        """
         return label_name in self.labels
 
     def nodes(self, label="", limit=25):
+        """
+        Retrieves nodes from a Neo4j database.
+        Args:
+            label (str): The label of the nodes to retrieve.
+            limit (int): The maximum number of nodes to retrieve.
+        Returns:
+            list: A list of nodes as dictionaries.
+        """
         if label:
             query = f"MATCH (n:{label}) RETURN n LIMIT {limit}"
         else:
@@ -52,6 +94,13 @@ class Neo4JService:
             return [record["n"] for record in result]
 
     def create(self, label: str, data: list[dict]):
+        """
+        Creates nodes in a Neo4j database.
+        Args:
+            label (str): The label of the nodes to create.
+            data (list): A list of dictionaries containing the properties of the nodes to create.
+        Returns:
+            None"""
         props = [
             (
                 "{"
@@ -66,12 +115,26 @@ class Neo4JService:
             session.run(queries)
 
     def delete_table(self, label):
+        """
+        Deletes all nodes of a specified label from a Neo4j database.
+        Args:
+            label (str): The label of the nodes to delete.
+        Returns:
+            None
+        """
         query = f"MATCH (t: {label}) DELETE t"
         with self.driver.session() as session:
             session.run(query)
 
     def import_pg(self, tables: list[Table], rels: list):
-
+        """
+        Imports data from a PostgreSQL database into a Neo4j database.
+        Args:
+            tables (list): A list of Table objects representing the tables to import.
+            rels (list): A list of tuples representing relationships between tables (the foreign key constraints).
+        Returns:
+            None
+        """
         for table in tables:
             records = table.records()
             self.create(table.name, records)
@@ -86,6 +149,11 @@ class Neo4JService:
             self.run_query(query)
 
     def clean(self):
+        """
+        Deletes all nodes and relationships from a Neo4j database.
+        Returns:
+            None
+        """
         query = f"MATCH (n) DETACH DELETE n"
         with self.driver.session() as session:
             session.run(query)
@@ -95,11 +163,24 @@ class Neo4JService:
 
     @property
     def node_props(self):
+        """
+        Retrieves the properties of node types in the Neo4j database schema.
+        Returns:
+            list: A list of dictionaries, where each dictionary contains the properties 
+                  of a node type in the Neo4j database schema.
+        """
+
         query = """CALL db.schema.nodeTypeProperties()"""
         return self.run_query(query)
 
     @property
     def rel_type_props(self):
+        """
+        Retrieves the properties of relationship types in the Neo4j database schema.
+        Returns:
+            list: A list of dictionaries, where each dictionary contains the properties 
+                  of a relationship type in the Neo4j database schema.
+        """
         query = """
         CALL db.schema.relTypeProperties()
         """
@@ -108,12 +189,22 @@ class Neo4JService:
 
     @property
     def visualization(self):
+        """
+        Visualizes a Neo4j database schema.
+        Returns:
+            str: A string representation of the database schema visualization.
+        """
         query = """
         CALL db.schema.visualization()
         """
         return self.run_query(query)
 
     def get_schema(self):
+        """
+        Retrieves the schema of a Neo4j database to be used for an LLM.
+        Returns:
+            str: A string representation of the database schema.
+        """
         schema = f"""
         This is the schema representation of the Neo4J database:
         \n\n\n

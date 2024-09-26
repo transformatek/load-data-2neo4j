@@ -10,6 +10,13 @@ API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sent
 
 
 def query(texts: list[str]):
+    """
+    Queries the Hugging Face API for text embeddings.
+    Args:
+        texts (list): A list of strings to embed.
+    Returns:
+        dict: The embeddings for the input texts.
+    """
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
     response = requests.post(
         API_URL,

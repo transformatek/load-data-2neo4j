@@ -17,6 +17,12 @@ class NL2CypherPrompt:
         self.database_schema = self.neo4j_service.get_schema()
 
     def gen_prompt(self, user_input) -> str:
+        """
+        Generates a prompt for the user to generate Cypher queries based on the given user input.
+        Args:
+            user_input (str): The user input to generate the prompt for.
+        Returns:
+            str: A prompt for generating Cypher queries based on the user input."""
 
         examples = self.dynamic_example.get_examples(user_input)
         context = self.database_schema

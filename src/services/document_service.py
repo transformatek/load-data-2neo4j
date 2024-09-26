@@ -13,4 +13,9 @@ class Document:
         self.chunks = chunks
 
     def load_embeddings(self):
+        """
+        Load the embeddings for each chunk of the document.
+        Returns:
+            list: The embeddings for the document.
+        """
         return [(query(chunk), chunk) for chunk in self.chunks]

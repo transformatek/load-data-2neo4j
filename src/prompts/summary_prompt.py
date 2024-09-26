@@ -16,7 +16,11 @@ class SummaryPrompt:
         self.database_schema = self.neo4j_service.get_schema()
 
     def gen_summary_prompt(self) -> str:
-
+        """
+        Generates a prompt for summarizing the data in the Neo4j database.
+        Returns:
+            str: A prompt for summarizing the data in the Neo4j database.
+        """
         context = f"""
         This is the data present in the Neo4j database:
         
@@ -44,4 +48,11 @@ class SummaryPrompt:
             """
 
     def prompt_llm(self, prompt):
+        """
+        Prompts an AI model for an answer
+        Args:
+            prompt (str): The prompt to provide to the AI model.
+        Returns:
+            str: The response from the LLM
+        """
         return self.ai_model_service(prompt)
