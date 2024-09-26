@@ -1,14 +1,8 @@
-import requests
 import os
 import json
 import pandas as pd
 import numpy as np
-from dotenv import load_dotenv, find_dotenv
-dotenv_path = find_dotenv()
-load_dotenv(dotenv_path)
-
-HF_TOKEN = os.getenv("WRITE_TOKEN")
-API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+from utils.embedding_query import query
 
 
 class DynamicExample:
@@ -24,15 +18,6 @@ class DynamicExample:
                          "../../data/embeddings/embeddings.csv"), "r"
         ) as f:
             self.embeddings = pd.read_csv(f)
-
-    def query(self, texts: list[str]):
-        headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-        response = requests.post(
-            API_URL,
-            headers=headers,
-            json={"inputs": texts, "options": {"wait_for_model": True}},
-        )
-        return response.json()
 
     def cosine_similarity(self, embedding_vector_a, embedding_vector_b):
         embedding_vector_a = np.array(embedding_vector_a)
@@ -64,7 +49,7 @@ class DynamicExample:
         embeddings = self.embeddings
         examples = self.examples
         dataset_embeddings = np.array(embeddings)
-        question = self.query(user_input)
+        question = query(user_input)
         query_embeddings = np.array(question)
         hits = self.get_k_most_similar(
             dataset_embeddings, query_embeddings, top_k, threshold

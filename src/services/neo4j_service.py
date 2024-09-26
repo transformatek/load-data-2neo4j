@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from neo4j import GraphDatabase
-from services.postgres_service import Table, PostgresService
+from services.postgres_service import Table
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)

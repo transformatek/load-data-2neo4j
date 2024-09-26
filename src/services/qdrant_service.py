@@ -1,6 +1,5 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance, PointStruct
-import numpy as np
 
 
 class QdrantService:
@@ -17,16 +16,16 @@ class QdrantService:
                 vectors_config=VectorParams(size=384, distance=Distance.COSINE)
             )
 
-    def insert_vectors(self, collection_name: str, vectors, payloads):
+    def insert_vectors(self, collection_name: str, vectors):
         self().upsert(
             collection_name=collection_name,
             points=[
                 PointStruct(
                     id=idx,
                     vector=vector[0],
-                    payload=vector[1]
+                    payload={'sentence': vector[1]}
                 )
-                for idx, vector in enumerate(zip(vectors, payloads))
+                for idx, vector in enumerate(vectors)
             ]
         )
 
@@ -44,6 +43,6 @@ class QdrantService:
         hits = self().search(
             collection_name=collection_name,
             query_vector=target_vector,
-            limits=top_k
+            limit=top_k
         )
         return hits
