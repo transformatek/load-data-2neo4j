@@ -26,6 +26,12 @@ The process involves extracting data from a PostgreSQL database, then converting
 **Tools:** Hugging Face API
 
 **Process:** Using the graph database schema, and the examples most similar to a user input, an optimized prompt is given to an LLM to get a corresponding Cypher query to the question.
+### 5. Use of Vector Database for Document Summarization
+
+**Tools:** Qdrant, Hugging Face API
+
+**Process:** Chunking the input text, generating an embedding for each chunk as well as the entire document, and using the most similar chunks to the document in order to generate a summary for said document.
+
 ## Usage
 ### Start Neo4J Database 
 
@@ -95,9 +101,15 @@ The embeddings are now available in CSV format in the /data/embeddings/embedding
 
 ### Retrieve the most similar examples from examples.json
 ```bash
+cd /src
 python get_most_similar.py
 ```
 
+### Summarize an input text document
+```bash
+cd /src
+python summarize_document.py
+```
 ## Useful links
 
  1. [How to Convert Any Text Into a Graph of Concepts](https://towardsdatascience.com/how-to-convert-any-text-into-a-graph-of-concepts-110844f22a1a)

@@ -19,6 +19,14 @@ class AIModelService:
         return self.client.text_generation(prompt, max_new_tokens=10000)
 
     def humanize_answer(self, question, data):
+        """
+        Given a question and a set of data that answers that question, generates a human-readable answer.
+        Args:
+            question (str): The question to answer.
+            data (str): The data that answers the question.
+        Returns:
+            str: A human-readable answer to the question.
+        """
         prompt = f"""
         Consider the following question: "{question}"
         And the following set of data which is an answer to that question: {data}

@@ -1,14 +1,8 @@
-import requests
 import os
 import json
 import pandas as pd
 import numpy as np
-from dotenv import load_dotenv, find_dotenv
-dotenv_path = find_dotenv()
-load_dotenv(dotenv_path)
-
-HF_TOKEN = os.getenv("WRITE_TOKEN")
-API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+from utils.embedding_query import query
 
 
 class DynamicExample:
@@ -25,16 +19,15 @@ class DynamicExample:
         ) as f:
             self.embeddings = pd.read_csv(f)
 
-    def query(self, texts: list[str]):
-        headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-        response = requests.post(
-            API_URL,
-            headers=headers,
-            json={"inputs": texts, "options": {"wait_for_model": True}},
-        )
-        return response.json()
-
     def cosine_similarity(self, embedding_vector_a, embedding_vector_b):
+        """
+        Calculate the cosine similarity between two vectors.
+        Args:
+            embedding_vector_a (np.array): The first vector.
+            embedding_vector_b (np.array): The second vector.
+        Returns:
+            float: The cosine similarity between the two vectors.
+        """
         embedding_vector_a = np.array(embedding_vector_a)
         embedding_vector_b = np.array(embedding_vector_b)
         dot_product = np.dot(embedding_vector_a, embedding_vector_b)
@@ -45,6 +38,18 @@ class DynamicExample:
         return cosine_similarity
 
     def get_k_most_similar(self, embeddings, target_embedding, top_k, threshold):
+        """
+        Get the k most similar embeddings to a target embedding.
+        Args:
+            embeddings (np.array): A list of embeddings.
+            target_embedding (np.array): The target embedding.
+            top_k (int): The number of most similar embeddings to return.
+            threshold (float): The minimum similarity threshold.
+        Returns:
+            np.array: The indices of the k most similar embeddings.
+            np.array: The k most similar embeddings.
+            np.array: The cosine similarities of the k most similar embeddings.
+        """
         embeddings = np.array(embeddings)
         target_embedding = np.array(target_embedding)
 
@@ -61,10 +66,19 @@ class DynamicExample:
         return top_k_indices, top_k_embeddings, similarities[top_k_indices]
 
     def get_examples(self, user_input: list[str], top_k=5, threshold=0.6):
+        """
+        Get the most similar examples to a user input.
+        Args:
+            user_input (list[str]): The user input.
+            top_k (int): The number of most similar examples to return.
+            threshold (float): The minimum similarity threshold.
+        Returns:
+            list: The most similar examples to the user input.
+        """
         embeddings = self.embeddings
         examples = self.examples
         dataset_embeddings = np.array(embeddings)
-        question = self.query(user_input)
+        question = query(user_input)
         query_embeddings = np.array(question)
         hits = self.get_k_most_similar(
             dataset_embeddings, query_embeddings, top_k, threshold
